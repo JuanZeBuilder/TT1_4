@@ -28,22 +28,25 @@ Itinerary.createItinerary = (result) => {
   });
 };
 
-Itinerary.findByUserId = (userId, result) => {
+Itinerary.getByUserId = (userId, result) => {
   sql.query(`SELECT
-      i.id AS itinerary_id,
-      i.title AS itinerary_title,
-      i.budget AS itinerary_budget,
-      d.id AS destination_id,
-      d.name AS destination_name,
-      d.cost AS destination_cost
-    FROM
-      techtrek24.itinerary i
-    JOIN
-      techtrek24.itinerary_destination id ON i.id = id.itinerary_id
-    JOIN
-      techtrek24.destination d ON id.destination_id = d.id
-    WHERE
-  i.user_id = ${userId};`, (err, res) => {
+  i.title AS title,
+  i.budget AS budget,
+  c.name AS country_name,
+  GROUP_CONCAT(d.name) AS destination_names
+FROM
+  techtrek24.itinerary i
+JOIN
+  techtrek24.itinerary_destination id ON i.id = id.itinerary_id
+JOIN
+  techtrek24.destination d ON id.destination_id = d.id
+JOIN
+  techtrek24.country c ON i.country_id = c.id
+WHERE
+  i.user_id = ${userId}
+GROUP BY
+  i.title, i.budget, c.name;
+`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -51,8 +54,17 @@ Itinerary.findByUserId = (userId, result) => {
     }
 
     if (res.length) {
-      console.log("Itinerary: ", res);
-      result(null, res);
+      const formattedResult = res.map((row) => {
+        return {
+          title: row.title,
+          budget: row.budget,
+          country: row.country_name,
+          destinations: row.destination_names ? row.destination_names.split(",").map(destination => destination.trim()) : []
+        };
+      });
+
+      console.log("Itinerary: ", formattedResult);
+      result(null, formattedResult);
       return;
     }
     result({ kind: "not_found" }, null);

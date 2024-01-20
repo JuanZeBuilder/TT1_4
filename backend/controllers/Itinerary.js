@@ -1,7 +1,7 @@
 const Itinerary = require("../models/Itinerary");
 
 exports.getItineraryByUserId = (req, res) => {
-  Order.findById(req.params.userId, (err, data) => {
+  Itinerary.getByUserId(req.params.userId, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
