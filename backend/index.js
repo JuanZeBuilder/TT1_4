@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 require("./routes/Country")(app);
+require("./routes/Destination")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
