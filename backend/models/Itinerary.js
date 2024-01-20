@@ -8,28 +8,23 @@ const Itinerary = function (itinerary) {
   this.title = itinerary.title;
 };
 
-Itinerary.createItinerary = (result) => {
-  let query =
-    "INSERT INTO itinerary (`id`, `country_id`, `user_id`, `budget`, `title`) VALUES (?)";
-  const values = [
-    req.body.id,
-    req.body.country_id,
-    req.body.user_id,
-    req.budget,
-    req.title,
-  ];
-  sql.query(query, [values], (err, res) => {
+Itinerary.createItinerary = (req, result) => {
+  // let req = itinerary.body;
+  console.log(req.body);
+  sql.query("INSERT INTO itinerary SET ?", req.body, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
+    } else {
+      result(null, res);
     }
-    res.json(result);
   });
 };
 
 Itinerary.getByUserId = (userId, result) => {
-  sql.query(`SELECT
+  sql.query(
+    `SELECT
   i.title AS title,
   i.budget AS budget,
   c.name AS country_name,
@@ -46,29 +41,35 @@ WHERE
   i.user_id = ${userId}
 GROUP BY
   i.title, i.budget, c.name;
-`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(err, null);
-      return;
-    }
+`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    if (res.length) {
-      const formattedResult = res.map((row) => {
-        return {
-          title: row.title,
-          budget: row.budget,
-          country: row.country_name,
-          destinations: row.destination_names ? row.destination_names.split(",").map(destination => destination.trim()) : []
-        };
-      });
+      if (res.length) {
+        const formattedResult = res.map((row) => {
+          return {
+            title: row.title,
+            budget: row.budget,
+            country: row.country_name,
+            destinations: row.destination_names
+              ? row.destination_names
+                  .split(",")
+                  .map((destination) => destination.trim())
+              : [],
+          };
+        });
 
-      console.log("Itinerary: ", formattedResult);
-      result(null, formattedResult);
-      return;
+        console.log("Itinerary: ", formattedResult);
+        result(null, formattedResult);
+        return;
+      }
+      result({ kind: "not_found" }, null);
     }
-    result({ kind: "not_found" }, null);
-  });
+  );
 };
 
 module.exports = Itinerary;
