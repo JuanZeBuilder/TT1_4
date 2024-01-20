@@ -41,7 +41,7 @@ JOIN
 WHERE
   i.user_id = ${userId}
 GROUP BY
-  i.title, i.budget, c.name;
+  i.id, i.title, i.budget, c.name;
 `,
     (err, res) => {
       if (err) {
