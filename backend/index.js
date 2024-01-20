@@ -1,7 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const countryRoutes = require("./routes/Country");
+const loginRoutes = require('./routes/Login');
 const router = express.Router();
+
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -21,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 require("./routes/Country")(app);
 require("./routes/Destination")(app);
 require("./routes/Itinerary")(app);
+require("./routes/Login")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

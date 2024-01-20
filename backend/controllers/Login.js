@@ -1,15 +1,29 @@
 const MainLogin = require("../models/Login");
+const GenerateToken = require("../GenerateToken");
+const generateToken = new GenerateToken();
+const generate_token = async (userid)=>{
 
-exports.login = (req, res) => {
-    MainLogin(req, (err, data) => {
+    const token = await generateToken.execute(userid);
+    console.log(token);
+    return token;
+
+}
+//const token = await generateToken.execute(user.userId);
+
+exports.login =  (req, res) => {
+    MainLogin(req, async (err, data) => {
         if (err)
             res.status(500).send({
                 message:
                     err.message || "Some error occurred while at Login route ."
             });
         else {
-            console.log("success!", data);
-            res.send(data);
+            if (data){
+            //res.send(data);
+            const token = await generate_token(data["id"])
+            res.send({status: "Ok", 
+                jwt_token: token});
+            }
         }
     });
 };

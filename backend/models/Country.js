@@ -6,7 +6,7 @@ const Country = function (country) {
 };
 
 Country.getAll = result => {
-    let query = "SELECT * FROM DBS.country";
+    let query = "SELECT * FROM techtrek24.country";
 
     sql.query(query, (err, res) => {
         if (err) {

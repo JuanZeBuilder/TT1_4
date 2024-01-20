@@ -25,11 +25,8 @@ LoginInstrument.findById = (username, result) => {
 
 
 const MainLogin = (req, res) => {
-    console.log(req);
     const USERNAME = req.body.username;
     const PASSWORD = req.body.password;
-    console.log(USERNAME);
-    console.log(PASSWORD);
 
     sql.query(`SELECT * FROM techtrek24.user WHERE username = '${USERNAME}' AND password = '${PASSWORD}'`, (err, result) => {
             if (err) {
@@ -37,7 +34,6 @@ const MainLogin = (req, res) => {
                 res(null, err);
                 return;
             }
-            console.log("instrument: ", result);
             res(null, result);
         });
     
