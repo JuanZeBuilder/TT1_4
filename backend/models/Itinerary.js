@@ -25,6 +25,7 @@ Itinerary.createItinerary = (req, result) => {
 Itinerary.getByUserId = (userId, result) => {
   sql.query(
     `SELECT
+  i.id AS id,
   i.title AS title,
   i.budget AS budget,
   c.name AS country_name,
@@ -52,6 +53,7 @@ GROUP BY
       if (res.length) {
         const formattedResult = res.map((row) => {
           return {
+            id: row.id,
             title: row.title,
             budget: row.budget,
             country: row.country_name,
