@@ -13,6 +13,7 @@ exports.createItinerary = (req, res) => {
     }
   });
 };
+
 exports.getItineraryByUserId = (req, res) => {
   Itinerary.getByUserId(req.params.userId, (err, data) => {
     if (err) {
