@@ -57,8 +57,8 @@ GROUP BY
             country: row.country_name,
             destinations: row.destination_names
               ? row.destination_names
-                  .split(",")
-                  .map((destination) => destination.trim())
+                .split(",")
+                .map((destination) => destination.trim())
               : [],
           };
         });
@@ -70,6 +70,21 @@ GROUP BY
       result({ kind: "not_found" }, null);
     }
   );
+};
+
+Itinerary.deleteItinerary = (itineraryId, result) => {
+
+  let query = `DELETE FROM techtrek24.itinerary WHERE id=${itineraryId}`;
+
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Success");
+    result(null, res);
+  });
 };
 
 module.exports = Itinerary;
