@@ -1,59 +1,50 @@
-import axios from "axios";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { LoadingButton } from "@mui/lab";
-import { Typography } from "@mui/material";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { LoadingButton } from '@mui/lab';
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
 import {
-  DataGrid,
-  GridColDef,
-  GridRowSelectionModel,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
-import Navbar from "../components/Navbar/Navbar";
-import { useAuth } from "../context/AuthContext";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+    DataGrid, GridColDef, GridRowSelectionModel, GridToolbar, GridValueGetterParams
+} from '@mui/x-data-grid';
 
 // columns header
 const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 90 },
+  { field: "id", headerName: "ID", flex: 0.05 },
   {
     field: "title",
     headerName: "Title",
-    width: 150,
+    flex: 0.2,
   },
   {
     field: "budget",
     headerName: "Budget (SGD)",
     type: "number",
-    width: 150,
+    flex: 0.1,
   },
   {
     field: "country",
     headerName: "Country",
-    width: 110,
+    flex: 0.1,
   },
   {
     field: "destinations",
     headerName: "Destinations",
-    description: "This column has a value getter and is not sortable.",
     sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+    flex: 0.5,
+    valueGetter: (params: GridValueGetterParams) => `${params.value}`,
   },
   {
     field: "action",
     headerName: "Action",
-    width: 150,
+    flex: 0.05,
     sortable: false,
     renderCell: (params) => (
       <IconButton aria-label="delete">
@@ -64,82 +55,94 @@ const columns: GridColDef[] = [
   },
 ];
 
-// actual data
+// actual data - hardcoded for now
 const rows = [
-  { id: 1, title: "Snow", budget: "Jon", country: 14 },
-  { id: 2, title: "Lannister", budget: "Cersei", country: 31 },
-  { id: 3, title: "Lannister", budget: "Jaime", country: 31 },
-  { id: 4, title: "Stark", budget: "Arya", country: 11 },
-  { id: 5, title: "Targaryen", budget: "Daenerys", country: null },
-  { id: 6, title: "Melisandre", budget: null, country: 150 },
-  { id: 7, title: "Clifford", budget: "Ferrara", country: 44 },
-  { id: 8, title: "Frances", budget: "Rossini", country: 36 },
-  { id: 9, title: "Roxie", budget: "Harvey", country: 65 },
+  {
+    id: 1,
+    title: "Sightseeing in Singapore",
+    budget: 500,
+    country: "Singapore",
+    destinations: ["Marina Bay Sands", "Gardens by the Bay", "Sentosa Island"],
+  },
+  {
+    id: 2,
+    title: "Singapore Adventure",
+    budget: 800,
+    country: "Singapore",
+    destinations: ["Universal Studios Singapore", "Singapore Zoo"],
+  },
 ];
 
 export default function DashboardPage() {
   const [deleting, setDeleting] = useState(false);
   const [selected, setSelected] = useState<GridRowSelectionModel>([]);
+  // const [rows, setRows] = useState([]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("api/itinerary/1", {
+  //       headers: { Authorization: `Bearer ${ }` },
+  //     })
+  //     .then((res) => {
+  //       setRows(res.data);
+  //     })
+  //     .catch((err) => {
+  //       toast(err || "Something went wrong");
+  //     });
+  // }, []);
 
   const handleDelete = () => {
     setDeleting(true);
 
     for (const id of selected) {
-      toast(id);
-      //   axios
-      //     .get(`/`) // todo
-      //     .then(() => {
-      //       toast(`Plan with ID ${id} deleted`);
-      //     })
-      //     .catch((err) => {
-      //       toast("Something went wrong");
-      //     });
+      axios
+        .delete(`/api/itinerary/${id}`) // todo
+        .then(() => {
+          toast(`Plan with ID ${id} deleted`);
+        })
+        .catch((err) => {
+          toast("Something went wrong");
+        });
     }
     setDeleting(false);
   };
 
-  const { isLoggedIn } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate("/home");
-    }
-  }, []);
-
   return (
-    <>
-      <Navbar path="dashboard" />
-      <Box sx={{ height: 400, width: "100%" }}>
-        <Typography variant="h4" sx={{ margin: "8px 0" }}>
-          Plans
-        </Typography>
-        <Stack spacing={2} direction="row" sx={{ margin: "4px 0" }}>
-          <Button startIcon={<AddIcon />}>New Plan</Button>
-          <LoadingButton
-            startIcon={<DeleteIcon />}
-            loading={deleting}
-            onClick={handleDelete}
-          >
-            Delete
-          </LoadingButton>
-        </Stack>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 5,
-              },
+    <Box sx={{ height: 400, width: "100%" }}>
+      <Typography variant="h4" sx={{ margin: "8px 0" }}>
+        Plans
+      </Typography>
+      <Stack spacing={2} direction="row" sx={{ margin: "4px 0" }}>
+        <Button startIcon={<AddIcon />}>New Plan</Button>
+        <LoadingButton
+          startIcon={<DeleteIcon />}
+          loading={deleting}
+          onClick={handleDelete}
+        >
+          Delete
+        </LoadingButton>
+      </Stack>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 5,
             },
-          }}
-          pageSizeOptions={[5]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          onRowSelectionModelChange={(params) => setSelected(params)} // todo: delete
-        />
-      </Box>
-    </>
+          },
+        }}
+        pageSizeOptions={[5]}
+        checkboxSelection
+        disableRowSelectionOnClick
+        onRowSelectionModelChange={(params) => setSelected(params)} // todo: delete
+        slots={{ toolbar: GridToolbar }}
+        slotProps={{
+          toolbar: {
+            showQuickFilter: true,
+          },
+        }}
+      />
+    </Box>
   );
 }
