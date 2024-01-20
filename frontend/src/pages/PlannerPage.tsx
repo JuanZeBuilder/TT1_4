@@ -41,16 +41,14 @@ const PlannerPage: React.FC = () => {
     setPlannedItineraryText("");
   };
 
-  const planItinerary = () => {
+  const planItinerary = async () => {
     // Add your API call logic here
     // You can use selectedItinerary to fetch the details of the selected itinerary
-    const plannedItinerary = `Planning itinerary: ${JSON.stringify(
-      itineraries[selectedValue]
-    )}`;
+    setPlannedItineraryText("Loading...");
 
-    callOpenAPI(itineraries[selectedValue]);
+    const text = await callOpenAPI(itineraries[selectedValue]);
 
-    setPlannedItineraryText(plannedItinerary);
+    setPlannedItineraryText(text);
   };
 
   const handleCopyToClipboard = () => {
@@ -73,7 +71,7 @@ const PlannerPage: React.FC = () => {
         flexDirection="column"
         alignItems="center"
         minHeight="100vh"
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: "20px", maxWidth: "1000px", marginLeft: "auto", marginRight: "auto" }}
       >
         <Typography>Choose an Itinerary</Typography>
         <FormControl>
