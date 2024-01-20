@@ -57,8 +57,8 @@ GROUP BY
             country: row.country_name,
             destinations: row.destination_names
               ? row.destination_names
-                  .split(",")
-                  .map((destination) => destination.trim())
+                .split(",")
+                .map((destination) => destination.trim())
               : [],
           };
         });
@@ -72,4 +72,42 @@ GROUP BY
   );
 };
 
+Itinerary.deleteItinerary = (itineraryId, result) => {
+
+  let query = `DELETE FROM techtrek24.itinerary WHERE id=${itineraryId}`;
+
+  sql.query(query, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    console.log("Success");
+    result(null, res);
+  });
+};
+
 module.exports = Itinerary;
+
+Itinerary.editItinerary = (id, newFields, result) => {
+  console.log(newFields.body);
+  const setClause = Object.keys(newFields.body)
+    .map((key) => `${key} = ?`)
+    .join(", ");
+
+  console.log(setClause);
+  const query = `UPDATE techtrek24.itinerary SET ${setClause} WHERE id = ?`;
+
+  const values = [...Object.values(newFields.body), id];
+
+  sql.query(query, values, (err, res) => {
+    if (err) {
+      console.error("Error updating destination:", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("Destination updated successfully:", res);
+    result(null, res);
+  });
+};
