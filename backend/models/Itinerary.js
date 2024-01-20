@@ -32,7 +32,7 @@ Itinerary.getByUserId = (userId, result) => {
 FROM
   techtrek24.itinerary i
 JOIN
-  techtrek24.itinerary_destination id ON i.id = id.itineray_id
+  techtrek24.itinerary_destination id ON i.id = id.itinerary_id
 JOIN
   techtrek24.destination d ON id.destination_id = d.id
 JOIN

@@ -1,21 +1,12 @@
 module.exports = app => {
     const destination = require("../controllers/Destination");
+    const authenticateToken = require('../middleware/Authentication');
 
     var router = require("express").Router();
-    // router.post("/", instruments.create);
-    router.get("/", destination.findAll);
-    // router.get("/:id", instruments.findOne);
-    router.post("/", destination.create);
-    router.delete("/:id", destination.delete);
-    router.put("/:id", destination.update);
+    router.get("/", authenticateToken, destination.findAll);
+    router.post("/", authenticateToken, destination.create);
+    router.delete("/:id", authenticateToken, destination.delete);
+    router.put("/:id", authenticateToken, destination.update);
     app.use('/api/destination', router);
 
 };
-
-// module.exports = app => {
-//     const countries = require("../controllers/Country");
-//     var router = require("express").Router();
-//     router.get("/", countries.findAll);
-//     app.use('/api/countries', router);
-
-// };

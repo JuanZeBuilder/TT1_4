@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const secretKey = 'techtreck24';
 
 function authenticateToken(req, res, next) {
-    // const token = req.header('Authorization');
     console.log(req)
     const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
@@ -18,12 +17,12 @@ function authenticateToken(req, res, next) {
         console.log(decoded)
         if (err) {
             console.log(err)
-          return res.status(401).json({ message: 'Unauthorized - Invalid token' });
+            return res.status(401).json({ message: 'Unauthorized - Invalid token' });
         }
-    
+
         req.user = decoded;
         next();
-      });
+    });
 }
 
 module.exports = authenticateToken;
