@@ -3,7 +3,7 @@ module.exports = (app) => {
 
   var router = require("express").Router();
   // router.post("/", instruments.create);
-  router.get("/", itinerary.createItinerary);
+  router.post("/", itinerary.createItinerary);
   // router.get("/:id", instruments.findOne);
 
   app.use("/api/itinerary", router);

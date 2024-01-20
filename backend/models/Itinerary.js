@@ -10,13 +10,13 @@ const Itinerary = function (itinerary) {
 
 Itinerary.createItinerary = (result) => {
   let query =
-    "INSERT INTO itinerary (`id`, `country_id`, `user_id`, `budget`, `title`) VALUES (?)";
+    "INSERT INTO techtrek24.itinerary (`id`, `country_id`, `user_id`, `budget`, `title`) VALUES (?)";
   const values = [
     req.body.id,
     req.body.country_id,
     req.body.user_id,
-    req.budget,
-    req.title,
+    req.body.budget,
+    req.body.title,
   ];
   sql.query(query, [values], (err, res) => {
     if (err) {
