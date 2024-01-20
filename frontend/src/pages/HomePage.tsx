@@ -1,12 +1,13 @@
 // HomePage.tsx
 
-import React from 'react';
-import Navbar from '../components/Navbar/Navbar';
+import React from "react";
+import Navbar from "../components/Navbar/Navbar";
 
 const HomePage: React.FC = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar path="home"/>
+
       <div className="content">
         <h1>Welcome to the Home Page!</h1>
         <p>This is the content of your home page.</p>
