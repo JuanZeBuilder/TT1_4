@@ -11,7 +11,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, user, webToken, logout } = useAuth();
   const [activeNavItem, setActiveNavItem] = useState<string>(path);
   const navigate = useNavigate();
 
@@ -51,7 +51,7 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
             </li>
           )}
 
-          {isLoggedIn ? (
+          {(isLoggedIn && user) ? (
             <li
               style={{
                 marginLeft: "auto",
@@ -59,7 +59,7 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
                 color: "#fff",
               }}
             >
-              <li className={`nav-item`}>Welcome Back ...</li>
+              <li className={`nav-item`}>Welcome Back {user.first_name}</li>
               <li className={`nav-item`} onClick={() => logout()}>
                 Logout
               </li>

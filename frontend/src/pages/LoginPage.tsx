@@ -14,14 +14,31 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const loginResponse = await doLogin(accountId, password);
-
-    if (loginResponse === null) {
-      setError("Login failed... Please try again");
-    } else {
-      login(loginResponse);
+    const dummyLoginResponse = {
+      status: "Ok",
+      user: [
+        {
+          id: 1,
+          first_name: "John",
+          last_name: "Doe",
+          password: "johndoe123",
+          username: "johndoe",
+        },
+      ],
+      jwt_token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDU3MzE2NDB9.DSeSJ7bx94K5_yaPK81IfbMLEy1d4QAPNZjXo8zT5_4",
+    };
+      login(dummyLoginResponse);
       navigate("/home");
-    }
+
+    // const loginResponse = await doLogin(accountId, password);
+
+    // if (loginResponse === null) {
+    //   setError("Login failed... Please try again");
+    // } else {
+    //   login(loginResponse);
+    //   navigate("/home");
+    // }
   };
 
   return (
@@ -33,7 +50,7 @@ const LoginPage = () => {
         <>
           <h2>Login Page</h2>
           <div>
-            <label htmlFor="accountId">Account ID:</label>
+            <label htmlFor="accountId">Username:</label>
             <input
               type="text"
               id="accountId"

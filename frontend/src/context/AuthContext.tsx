@@ -4,6 +4,8 @@ import { LoginResponse } from "../api/doLogin";
 
 interface AuthContextProps {
   isLoggedIn: boolean;
+  user: User | null;
+  webToken: string;
   login: (loginRes: LoginResponse) => void;
   logout: () => void;
 }
@@ -39,12 +41,14 @@ const AuthProvider: React.FC = ({ children }) => {
   const logout = () => {
     setLoggedIn(false);
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+    localStorage.removeItem("webToken");
     alert("You have logged out successfully");
     window.location.href = "/home";
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, webToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
