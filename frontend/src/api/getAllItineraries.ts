@@ -1,7 +1,8 @@
 import { Itinerary } from "../model/Itinerary";
 
 export const getAllItineraries = async (
-  userId: string
+  userId: number,
+  webToken: string
 ): Promise<Itinerary[]> => {
   try {
     const backendURL = "http://localhost:8080/";
