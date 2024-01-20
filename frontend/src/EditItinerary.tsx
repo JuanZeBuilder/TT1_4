@@ -1,13 +1,16 @@
 import {useState, MouseEvent, ChangeEvent, FormEvent, Fragment, useEffect} from "react";
 // for items in popover
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
+import { red } from '@mui/material/colors';
 
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // for popover
 import Button from '@mui/material/Button';
@@ -45,17 +48,35 @@ const EditItinerary = ()=>{
     //           console.log('Error', error.message);
     //         }})})
     
+    // useEffect(() => {
+    //     setData({
+    //       "destination": "Fun times in Vietnam",
+    //       "budget": 1000,
+    //       "country": "Vietnam"
+    //     });
+    //     console.log(data);
+    //     const {destination, budget, country } = data;
+    //     setDestination(destination);
+    //     setBudget(budget);
+    //     setCountry(country);
+    //   }, []);
     useEffect(() => {
         setData({
           "destination": "Fun times in Vietnam",
           "budget": 1000,
           "country": "Vietnam"
         });
-        const {destination, budget, country } = data;
-        setDestination(destination);
-        setBudget(budget);
-        setCountry(country);
       }, []);
+      
+      useEffect(() => {
+        if (data) {
+          const { destination, budget, country } = data;
+          setDestination(destination);
+          setBudget(budget);
+          setCountry(country);
+        }
+      }, [data]);
+      
     // editing itinerary
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -64,14 +85,37 @@ const EditItinerary = ()=>{
             console.log(response.status, response.data.token);
         })
     }
+    const [itineraryid, setItineraryid] = useState('')
+    const handleClickOpen = event => {
+        setOpen(true); 
+        console.log(event.currentTarget.id);
+        setItineraryid(event.currentTarget.id);
+    };
 
-    const handleClickOpen = () => {
-        setOpen(true);
-      };
       const handleClose = () => {
         setOpen(false);
       };
-    
+
+    const handleDelete = (id: string) => {
+        axios.delete(`/api/your-endpoint/${id}`)
+            .then(response => {
+            console.log('Successfully deleted entry:', response.status);
+            // Optionally, perform additional actions after successful deletion
+            })
+            .catch((error: AxiosError) => {
+            console.error('Error deleting entry:', error.message);
+            // Handle errors
+            if (error.response) {
+                console.log('Error Response:', error.response.data);
+                console.log('Error Status:', error.response.status);
+                console.log('Error Headers:', error.response.headers);
+            } else if (error.request) {
+                console.log('Error Request:', error.request);
+            } else {
+                console.log('Error Message:', error.message);
+            }
+            });
+    };
 
     return(
         <Fragment>
@@ -84,9 +128,23 @@ const EditItinerary = ()=>{
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Edit Itinerary"}
-            </DialogTitle>
+            <Stack
+                    gap={2}
+                    direction={{
+                    xs: 'row-reverse',
+                    sm: 'row',
+                    }}
+                    sx={{
+                    flexShrink: 0,
+                    justifyContent:"space-between"
+                    // alignSelf: { xs: 'flex-end', sm: 'center' },
+                    }}
+                >
+                    <DialogTitle id="alert-dialog-title">{"Edit Itinerary"}</DialogTitle>
+                    <Button size="small" onClick={()=>handleDelete(itineraryid)}>
+                        <DeleteIcon sx={{ color: red[500] }}/>
+                    </Button>
+                </Stack>
             <DialogContent>
                 <DialogContentText>Destination:
                     <TextField fullWidth
@@ -121,10 +179,9 @@ const EditItinerary = ()=>{
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-              {/* <Button onClick={handleClose}>Disagree</Button> */}
-              <Button onClick={handleSubmit} autoFocus>
-                Save Changes
-              </Button>
+                    <Button size="small" onClick={handleSubmit} variant="contained">
+                    Save Changes
+                    </Button>
             </DialogActions>
           </Dialog>
         </Fragment>
