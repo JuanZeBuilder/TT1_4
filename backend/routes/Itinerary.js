@@ -1,11 +1,8 @@
-module.exports = app => {
-    const instruments = require("../controllers/Instrument");
+module.exports = (app) => {
+  const itinerary = require("../controllers/Itinerary");
 
-    var router = require("express").Router();
-    // router.post("/", instruments.create);
-    router.get("/", instruments.findAll);
-    // router.get("/:id", instruments.findOne);
-
-    app.use('/api/instruments', router);
-
+  var router = require("express").Router();
+  router.get("/:userId", itinerary.getItineraryByUserId);
+  router.post("/", itinerary.createItinerary);
+  app.use("/api/itinerary", router);
 };
