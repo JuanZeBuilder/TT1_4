@@ -29,23 +29,23 @@ const MainLogin = (req, res) => {
     const PASSWORD = req.body.password;
 
     sql.query(`SELECT * FROM techtrek24.user WHERE username = '${USERNAME}' AND password = '${PASSWORD}'`, (err, result) => {
-            if (err) {
-                console.log("error: ", err);
-                res(null, err);
-                return;
-            }
-            
-            if(result===undefined){
-                console.log("error: ", err);
-                res(null, err);
-                return;
-            }
-            else{
-                console.log(result);
-                res(null, result);   
-            }
-        });
-    
+        if (err) {
+            console.log("error: ", err);
+            res(null, err);
+            return;
+        }
+
+        if (result === undefined) {
+            console.log("error: ", err);
+            res(null, err);
+            return;
+        }
+        else {
+            console.log(result);
+            res(null, result);
+        }
+    });
+
 };
 
 module.exports = MainLogin;
