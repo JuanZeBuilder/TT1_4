@@ -21,13 +21,26 @@ exports.create = (req, res) => {
         else res.send(data);
     });
 };
-// exports.findAll = (req, res) => {
-//     Instrument.Destination((err, data) => {
-//         if (err)
-//             res.status(500).send({
-//                 message:
-//                     err.message || "Some error occurred while retrieving req.body."
-//             });
-//         else res.send(data);
-//     });
-// };
+
+exports.delete = (req, res) => {
+    Destination.deleteDestinationById(req.params.id, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving req.body."
+            });
+        else res.send(data);
+    });
+};
+
+
+exports.update = (req, res) => {
+    Destination.updateDestinationById(req.params.id, req, (err, data) => {
+        if (err)
+            res.status(500).send({
+                message:
+                    err.message || "Some error occurred while retrieving req.body."
+            });
+        else res.send(data);
+    });
+};
