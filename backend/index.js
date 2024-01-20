@@ -6,7 +6,7 @@ const router = express.Router();
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081",
+  origin: "http://localhost:8080",
 };
 
 app.use(cors(corsOptions));
@@ -19,12 +19,13 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 require("./routes/Country")(app);
+require("./routes/Destination")(app);
 require("./routes/Itinerary")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(
-    `Server is running on port ${PORT}. Link here: http://localhost:8081`
+    `Server is running on port ${PORT}. Link here: http://localhost:8080`
   );
 });
