@@ -1,36 +1,42 @@
 const MainLogin = require("../models/Login");
-const GenerateToken = require("../GenerateToken");
-const generateToken = new GenerateToken();
-const generate_token = async (userid)=>{
+const jwt = require('jsonwebtoken');
 
-    const token = await generateToken.execute(userid);
-    console.log(token);
+
+async function generateTokenForUser(userId) {
+    const token = jwt.sign({ userId: userId }, "techtreck24");
+    // const decodedPayload = jwt.decode(token);
+    // console.log("Decoded payload:", decodedPayload);
     return token;
-
 }
-//const token = await generateToken.execute(user.userId);
 
-exports.login =  (req, res) => {
-    MainLogin(req, async (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while at Login route ."
+exports.login = async (req, res) => {
+    try {
+        const userData = await new Promise((resolve, reject) => {
+            MainLogin(req, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
             });
-        else {
-            if (data.length>0){
-            //res.send(data);
-            const token = await generate_token(data["id"])
-            res.send({status: "Ok", 
-                    user: data,
-                jwt_token: token});
-            }
-            else{
-                res.status(500).send({
-                    message:
-                        "ERROR: NO USER."
-                });   
-            }
+        });
+
+        if (userData.length > 0) {
+
+            const token = await generateTokenForUser(userData[0].id);
+            res.send({
+                status: "Ok",
+                user: userData,
+                jwt_token: token
+            });
+        } else {
+            res.status(500).send({
+                message: "ERROR: NO USER."
+            });
         }
-    });
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Internal Server Error."
+        });
+    }
 };
