@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar/Navbar";
+import { doLogin } from "../api/doLogin";
 
 const LoginPage = () => {
-  const backendURL = "http://localhost:8080/";
   const { isLoggedIn, login } = useAuth();
   const [accountId, setAccountId] = useState("");
   const [password, setPassword] = useState("");
@@ -14,33 +14,14 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    login();
-    navigate("/home");
+    const loginResponse = await doLogin(accountId, password);
 
-    // try {
-    //   const response = await fetch(backendURL + "users/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ ACCOUNT_ID: accountId, PASSWORD: password }),
-    //   });
-
-    //   if (response.ok) {
-    //     // Authentication successful, handle the success (e.g., store tokens or redirect)
-    //     const data = await response.json();
-    //     console.log(data["code"]);
-    //     if (data["code"] === 200) {
-    //       login();
-    //       navigate("/home");
-    //     } else {
-    //       setError("Invalid username or password");
-    //     }
-    //   }
-    // } catch (error) {
-    //   console.error("Error during login:", error);
-    //   setError("An error occurred during login");
-    // }
+    if (loginResponse === null) {
+      setError("Login failed... Please try again");
+    } else {
+      login(loginResponse);
+      navigate("/home");
+    }
   };
 
   return (
@@ -50,7 +31,6 @@ const LoginPage = () => {
         <h2>You are already logged in.</h2>
       ) : (
         <>
-          {" "}
           <h2>Login Page</h2>
           <div>
             <label htmlFor="accountId">Account ID:</label>
