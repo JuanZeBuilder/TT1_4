@@ -1,9 +1,5 @@
 import {useState, MouseEvent, ChangeEvent, FormEvent, Fragment} from "react";
 // for items in popover
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
@@ -14,14 +10,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 // for popover
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 // for posting changes
 import axios from "axios"
 
 const CreateItinerary = () => {
-    const [destination, setDestination] = useState('');
+    const [title, setTitle] = useState('');
+    const [destination, setDestination] = useState<string[]>([]);
     const [budget, setBudget] = useState<number>();
     const [country, setCountry] = useState('');
     
@@ -38,7 +33,7 @@ const CreateItinerary = () => {
     // submitting new itinerary
     const handleSubmit = (e) => {
         e.preventDefault();
-        const itinerary = {destination, budget, country};
+        const itinerary = {title, budget, country, destination};
         console.log(itinerary)
         // axios.post("http://127.0.0.1:3000/", itinerary).then((response)=>{
         //     console.log(response.status, response.data.token);
@@ -60,14 +55,13 @@ const CreateItinerary = () => {
               {"Create New Itinerary"}
             </DialogTitle>
             <DialogContent>
-                <DialogContentText>Destination:
+                <DialogContentText>Title:
                     <TextField fullWidth
                     required
-                    id="destination-required"
-                    // label="Destination"
-                    value={destination}
+                    id="title-required"
+                    value={title}
                     onChange={(event: ChangeEvent<HTMLInputElement>)=>{
-                    setDestination(event.target.value)
+                    setTitle(event.target.value)
                     }}
                     /> 
                 </DialogContentText>
@@ -91,6 +85,20 @@ const CreateItinerary = () => {
                         onChange={(event: ChangeEvent<HTMLInputElement>)=>{
                         setCountry(event.target.value)
                         }}
+                    /> 
+                </DialogContentText>
+            </DialogContent>
+            <DialogContent>
+                <DialogContentText>Destination:
+                    <TextField fullWidth
+                    required
+                    id="destination-required"
+                    // label="Destination"
+                    value={destination}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        const finalarray = event.target.value.split(',');
+                        setDestination(finalarray)
+                    }}
                     /> 
                 </DialogContentText>
             </DialogContent>

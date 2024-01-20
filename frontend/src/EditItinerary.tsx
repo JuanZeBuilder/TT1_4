@@ -19,7 +19,8 @@ import axios,{AxiosError} from "axios"
 
 const EditItinerary = ()=>{
 
-    const [destination, setDestination] = useState('');
+    const [title, setTitle] = useState('');
+    const [destination, setDestination] = useState<string[]>([]);
     const [budget, setBudget] = useState<number>(0);
     const [country, setCountry] = useState('');
     const [open, setOpen] = useState(false);
@@ -48,29 +49,20 @@ const EditItinerary = ()=>{
     //           console.log('Error', error.message);
     //         }})})
     
-    // useEffect(() => {
-    //     setData({
-    //       "destination": "Fun times in Vietnam",
-    //       "budget": 1000,
-    //       "country": "Vietnam"
-    //     });
-    //     console.log(data);
-    //     const {destination, budget, country } = data;
-    //     setDestination(destination);
-    //     setBudget(budget);
-    //     setCountry(country);
-    //   }, []);
     useEffect(() => {
         setData({
-          "destination": "Fun times in Vietnam",
+            "title": "Sightseeing in Vietnam",
           "budget": 1000,
-          "country": "Vietnam"
+          "country": "Vietnam",
+          "destination": "Fun times in Vietnam",
+
         });
       }, []);
       
       useEffect(() => {
         if (data) {
-          const { destination, budget, country } = data;
+          const {title, budget, country, destination } = data;
+          setTitle(title);
           setDestination(destination);
           setBudget(budget);
           setCountry(country);
@@ -80,7 +72,7 @@ const EditItinerary = ()=>{
     // editing itinerary
     const handleSubmit = (e) => {
         e.preventDefault();
-        const itinerary = {destination, budget, country};
+        const itinerary = {title, budget, country, destination};
         axios.post("", itinerary).then((response)=>{
             console.log(response.status, response.data.token);
         })
@@ -145,14 +137,14 @@ const EditItinerary = ()=>{
                         <DeleteIcon sx={{ color: red[500] }}/>
                     </Button>
                 </Stack>
-            <DialogContent>
-                <DialogContentText>Destination:
+                <DialogContent>
+                <DialogContentText>Title:
                     <TextField fullWidth
                     required
-                    id="destination-required"
-                    value={destination}
+                    id="title-required"
+                    value={title}
                     onChange={(event: ChangeEvent<HTMLInputElement>)=>{
-                    setDestination(event.target.value)
+                    setTitle(event.target.value)
                     }}
                     /> 
                 </DialogContentText>
@@ -171,10 +163,25 @@ const EditItinerary = ()=>{
                     <TextField fullWidth
                         required
                         id="country-required"
+                        // label="Country"
                         value={country}
                         onChange={(event: ChangeEvent<HTMLInputElement>)=>{
                         setCountry(event.target.value)
                         }}
+                    /> 
+                </DialogContentText>
+            </DialogContent>
+            <DialogContent>
+                <DialogContentText>Destination:
+                    <TextField fullWidth
+                    required
+                    id="destination-required"
+                    // label="Destination"
+                    value={destination}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        const finalarray = event.target.value.split(',');
+                        setDestination(finalarray)
+                    }}
                     /> 
                 </DialogContentText>
             </DialogContent>
