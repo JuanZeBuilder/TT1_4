@@ -1,7 +1,9 @@
 // Navbar.tsx
 
-import React, { useState } from "react";
 import "./Navbar.css";
+
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   // Add any props if needed
@@ -9,9 +11,11 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = () => {
   const [activeNavItem, setActiveNavItem] = useState<string>("home");
+  const navigate = useNavigate();
 
   const handleNavItemClick = (itemName: string) => {
     setActiveNavItem(itemName);
+    navigate(itemName);
   };
 
   return (

@@ -1,4 +1,10 @@
+import SideNavbar from "../components/Dashboard/SideNavbar";
+
 const DashboardPage = () => {
-  return <div>DashboardPage</div>;
+  return (
+    <>
+      <SideNavbar />\
+    </>
+  );
 };
 export default DashboardPage;
