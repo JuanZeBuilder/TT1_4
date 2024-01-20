@@ -30,22 +30,26 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
           >
             Home
           </li>
-          <li
-            className={`nav-item ${
-              activeNavItem === "dashboard" ? "active" : ""
-            }`}
-            onClick={() => handleNavItemClick("dashboard")}
-          >
-            Dashboard
-          </li>
-          <li
-            className={`nav-item ${
-              activeNavItem === "planner" ? "active" : ""
-            }`}
-            onClick={() => handleNavItemClick("planner")}
-          >
-            Help me Plan!
-          </li>
+          {isLoggedIn && (
+            <li
+              className={`nav-item ${
+                activeNavItem === "dashboard" ? "active" : ""
+              }`}
+              onClick={() => handleNavItemClick("dashboard")}
+            >
+              Dashboard
+            </li>
+          )}
+          {isLoggedIn && (
+            <li
+              className={`nav-item ${
+                activeNavItem === "planner" ? "active" : ""
+              }`}
+              onClick={() => handleNavItemClick("planner")}
+            >
+              Help me Plan!
+            </li>
+          )}
 
           {isLoggedIn ? (
             <li

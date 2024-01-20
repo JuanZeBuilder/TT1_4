@@ -1,12 +1,10 @@
 import OpenAI from "openai";
 
-export const callOpenAPI = async (itinerary) => {
+export const callOpenAPI = async (itinerary): Promise<string> => {
   try {
-    const inputText = "What is 1 + 1?";
-    const content = "I will ";
-    console.log("TESTING")
+    const content = "I will send you the json string of the itinerary, with its budget, country and list of destinations: " + JSON.stringify(itinerary);
 
-    const openAiKey = "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";
+    const openAiKey = "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";
     const openai = new OpenAI({ apiKey: openAiKey, dangerouslyAllowBrowser: true });
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -15,21 +13,20 @@ export const callOpenAPI = async (itinerary) => {
           role: "system",
           content:
             "You are an expert in planning for an overseas adventure. You will be provided with the country, destinations and a budget. " +
-            "Help me to plan a trip within the budget. Share three popular tourist spots and three popular restaurants in the area.",
+            "Help me to plan a trip within the budget. Share three popular tourist spots and three popular restaurants in the area. Make it short and concise.",
         },
         {
           role: "user",
-          content: inputText,
+          content: content,
         },
       ],
       temperature: 0.4,
       max_tokens: 1024,
     });
 
-    console.log(completion.choices[0].message.content);
-    return completion.choices[0].message.content;
+    return completion.choices[0].message.content as string;
   } catch (error) {
     console.error("Error calling OpenAI API:", error.message);
-    return "";
+    return "Error, please try again.";
   }
 };
