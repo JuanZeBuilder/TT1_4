@@ -10,6 +10,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
+import { callOpenAPI } from "../helper/openAI";
 
 const PlannerPage: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("");
@@ -46,6 +47,8 @@ const PlannerPage: React.FC = () => {
     const plannedItinerary = `Planning itinerary: ${JSON.stringify(
       itineraries[selectedValue]
     )}`;
+
+    callOpenAPI(itineraries[selectedValue]);
 
     setPlannedItineraryText(plannedItinerary);
   };
