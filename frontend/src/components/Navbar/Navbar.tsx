@@ -17,7 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
 
   const handleNavItemClick = (itemName: string) => {
     setActiveNavItem(itemName);
-    navigate(itemName);
+    navigate("/" + itemName);
   };
 
   return (

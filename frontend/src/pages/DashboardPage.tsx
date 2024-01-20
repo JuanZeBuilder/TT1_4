@@ -1,9 +1,13 @@
-import SideNavbar from "../components/Dashboard/SideNavbar";
+import Navbar from "../components/Navbar/Navbar";
 
 const DashboardPage = () => {
   return (
     <>
-      <SideNavbar />
+      <Navbar path="dashboard" />
+      <div className="content">
+        <h1>Welcome to the Dashboard Page!</h1>
+        <p>This is the content of your dashboard page.</p>
+      </div>
     </>
   );
 };

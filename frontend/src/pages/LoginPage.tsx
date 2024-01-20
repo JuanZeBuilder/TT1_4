@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar/Navbar";
 
 const LoginPage = () => {
   const backendURL = "http://localhost:5000/";
@@ -41,6 +42,7 @@ const LoginPage = () => {
 
   return (
     <>
+      <Navbar path="login"/>
       {isLoggedIn ? (
         <h2>You are already logged in.</h2>
       ) : (

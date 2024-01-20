@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Navbar from "../components/Navbar/Navbar";
 
 const RegisterPage: React.FC = () => {
   const backendURL = "http://localhost:8080/";
@@ -46,6 +47,8 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div>
+      <Navbar path="register" />
+
       <h2>Register Now</h2>
       <div>
         <label htmlFor="first_name">First Name:</label>
