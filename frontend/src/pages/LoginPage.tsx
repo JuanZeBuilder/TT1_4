@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/Navbar/Navbar";
 
 const LoginPage = () => {
-  const backendURL = "http://localhost:5000/";
+  const backendURL = "http://localhost:8080/";
   const { isLoggedIn, login } = useAuth();
   const [accountId, setAccountId] = useState("");
   const [password, setPassword] = useState("");

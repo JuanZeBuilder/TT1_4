@@ -13,37 +13,32 @@ import {
 import { callOpenAPI } from "../helper/openAI";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
+import { Itinerary } from "../model/Itinerary";
+import { getAllItineraries, getAllItinerary } from "../api/getAllItineraries";
 
 const PlannerPage: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [plannedItineraryText, setPlannedItineraryText] = useState("");
   const [isCopied, setIsCopied] = useState(false);
-  const { isLoggedIn, logout } = useAuth();
+  const [itinerariesList, setItineriesList] = useState<Itinerary[]>([]);
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoggedIn) {
       navigate("/home");
+      return;
     }
+
+    getItineries();
+
   }, []);
 
-  const itineraries = [
-    {
-      userId: "user1",
-      title: "Trip to Europe",
-      budget: "$5000",
-      country: "France",
-      destinations: ["Paris", "Nice", "Lyon"],
-    },
-    {
-      userId: "user2",
-      title: "Adventure in Asia",
-      budget: "$3000",
-      country: "Japan",
-      destinations: ["Tokyo", "Osaka", "Kyoto"],
-    },
-    // Add more itineraries as needed
-  ];
+  const getItineries = async () => {
+    const list = await getAllItineraries("123Example");
+
+    setItineriesList(list);
+  }
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -56,7 +51,7 @@ const PlannerPage: React.FC = () => {
     // You can use selectedItinerary to fetch the details of the selected itinerary
     setPlannedItineraryText("Loading...");
 
-    const text = await callOpenAPI(itineraries[selectedValue]);
+    const text = await callOpenAPI(itinerariesList[selectedValue]);
 
     setPlannedItineraryText(text);
   };
@@ -100,7 +95,7 @@ const PlannerPage: React.FC = () => {
               <MenuItem value="" disabled>
                 Select an itinerary
               </MenuItem>
-              {itineraries.map((itinerary, index) => (
+              {itinerariesList.map((itinerary, index) => (
                 <MenuItem key={index} value={index}>
                   {itinerary.title} - {itinerary.country}
                 </MenuItem>
