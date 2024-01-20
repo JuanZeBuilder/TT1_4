@@ -59,7 +59,7 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
                 color: "#fff",
               }}
             >
-              <li className={`nav-item`}>Welcome Back {user.first_name}</li>
+              <li className={`nav-item`}>Welcome back, {user.first_name}</li>
               <li className={`nav-item`} onClick={() => logout()}>
                 Logout
               </li>
