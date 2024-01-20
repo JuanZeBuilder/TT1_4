@@ -1,20 +1,26 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
+import axios from "axios";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { LoadingButton } from '@mui/lab';
-import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
+import { Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import {
-    DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams
-} from '@mui/x-data-grid';
+  DataGrid,
+  GridColDef,
+  GridRowSelectionModel,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 import Navbar from "../components/Navbar/Navbar";
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 // columns header
 const columns: GridColDef[] = [
@@ -91,6 +97,15 @@ export default function DashboardPage() {
     }
     setDeleting(false);
   };
+
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/home");
+    }
+  }, []);
 
   return (
     <>

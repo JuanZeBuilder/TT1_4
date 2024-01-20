@@ -1,6 +1,6 @@
 // Planner.tsx
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar/Navbar";
 import {
   Box,
@@ -11,11 +11,21 @@ import {
   Typography,
 } from "@mui/material";
 import { callOpenAPI } from "../helper/openAI";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
 
 const PlannerPage: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("");
   const [plannedItineraryText, setPlannedItineraryText] = useState("");
   const [isCopied, setIsCopied] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/home");
+    }
+  }, []);
 
   const itineraries = [
     {
@@ -63,59 +73,66 @@ const PlannerPage: React.FC = () => {
         <Typography variant="h3">AI Planner</Typography>
         <Typography>
           Effortlessly plan your dream itinerary within your budget using our
-          intuitive and free service.
+          intuitive and free service in one minute.
         </Typography>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        minHeight="100vh"
-        style={{ marginTop: "20px", maxWidth: "1000px", marginLeft: "auto", marginRight: "auto" }}
-      >
-        <Typography>Choose an Itinerary</Typography>
-        <FormControl>
-          <Select
-            value={selectedValue}
-            onChange={handleChange}
-            displayEmpty
-            inputProps={{ "aria-label": "Select" }}
-          >
-            <MenuItem value="" disabled>
-              Select an itinerary
-            </MenuItem>
-            {itineraries.map((itinerary, index) => (
-              <MenuItem key={index} value={index}>
-                {itinerary.title} - {itinerary.country}
+      {isLoggedIn && (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          minHeight="100vh"
+          style={{
+            marginTop: "20px",
+            maxWidth: "1000px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <Typography>Choose an Itinerary</Typography>
+          <FormControl>
+            <Select
+              value={selectedValue}
+              onChange={handleChange}
+              displayEmpty
+              inputProps={{ "aria-label": "Select" }}
+            >
+              <MenuItem value="" disabled>
+                Select an itinerary
               </MenuItem>
-            ))}
-          </Select>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={planItinerary}
-            style={{ marginTop: "20px" }}
-          >
-            Help Me Plan!
-          </Button>
-        </FormControl>
-        <Box>
-          {plannedItineraryText && (
-            <Box style={{ marginTop: "20px" }}>
-              <Typography variant="body1">{plannedItineraryText}</Typography>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={handleCopyToClipboard}
-                disabled={isCopied} // Disable the button when it's already clicked
-                style={{ marginTop: "10px" }}
-              >
-                {isCopied ? "Copied!" : "Copy to Clipboard"}
-              </Button>
-            </Box>
-          )}
+              {itineraries.map((itinerary, index) => (
+                <MenuItem key={index} value={index}>
+                  {itinerary.title} - {itinerary.country}
+                </MenuItem>
+              ))}
+            </Select>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={planItinerary}
+              style={{ marginTop: "20px" }}
+            >
+              Help Me Plan!
+            </Button>
+          </FormControl>
+          <Box>
+            {plannedItineraryText && (
+              <Box style={{ marginTop: "20px" }}>
+                <Typography variant="body1">{plannedItineraryText}</Typography>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={handleCopyToClipboard}
+                  disabled={isCopied} // Disable the button when it's already clicked
+                  style={{ marginTop: "10px" }}
+                >
+                  {isCopied ? "Copied!" : "Copy to Clipboard"}
+                </Button>
+              </Box>
+            )}
+          </Box>
         </Box>
-      </Box>
+      )}
     </div>
   );
 };
