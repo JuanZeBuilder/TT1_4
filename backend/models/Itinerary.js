@@ -1,91 +1,28 @@
-const { hashSync, genSaltSync, compareSync } = require("bcrypt");
+const sql = require("../db/config");
 
-const Account = require("../models/Account");
+const Instrument = function (instrument) {
+    this.ISIN = instrument.isin;
+    this.INSTRUMENT = instrument.instrumentName;
+    this.SYMBOL = instrument.symbol;
+    this.CURRENCY = instrument.currency;
+    this.ASK_PRICE = instrument.askPrice;
+    this.BID_PRICE = instrument.bidPrice;
+    this.ROUND_LOT = instrument.roundPrice;
+};
 
-exports.register = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-    }
+Instrument.getAll = result => {
+    let query = "SELECT * FROM corporatebanking.instrument";
 
-    const account = new Account({
-        ACCOUNT_ID: req.body.ACCOUNT_ID,
-        PASSWORD: req.body.PASSWORD,
-        FIRST_NAME: req.body.FIRST_NAME,
-        LAST_NAME: req.body.LAST_NAME,
-        DOB: req.body.DOB,
-        EMAIL: req.body.EMAIL
-    });
+    sql.query(query, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(null, err);
+            return;
+        }
 
-    const salt = genSaltSync(10);
-    console.log(account.PASSWORD);
-    account.PASSWORD = hashSync(account.PASSWORD, salt);
-
-    Account.create(account, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while registering."
-            });
-        else res.send("Registration successful!");
+        console.log("instrument: ", res);
+        result(null, res);
     });
 };
 
-exports.login = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-    }
-
-    const ACCOUNT_ID = req.body.ACCOUNT_ID;
-    const PASSWORD = req.body.PASSWORD;
-
-    Account.findById(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred during login."
-            });
-        else {
-            const isValidPassword = compareSync(PASSWORD, data[0].PASSWORD);
-
-            if (isValidPassword) {
-                res.send("Login success!");
-            } else {
-                res.send("Login failed!");
-
-            }
-
-        };
-    });
-
-};
-
-exports.subscribe = (req, res) => {
-    console.log(req.params.id);
-    const ACCOUNT_ID = req.params.id;
-
-    Account.subscribe(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while subscribing."
-            });
-        else res.send("Subscription successful!");
-    });
-};
-
-exports.getSubscribers = (req, res) => {
-
-    Account.getSubscribers((err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving subscribers."
-            });
-        else res.send(data);
-    });
-};
-
+module.exports = Instrument;

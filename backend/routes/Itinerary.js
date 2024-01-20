@@ -1,12 +1,11 @@
 module.exports = app => {
-    const account = require("../controllers/Account");
+    const instruments = require("../controllers/Instrument");
 
     var router = require("express").Router();
-    router.post("/register", account.register);
-    router.post("/login", account.login);
-    router.put("/subscribe/:id", account.subscribe);
-    router.get("/subscribers", account.getSubscribers);
+    // router.post("/", instruments.create);
+    router.get("/", instruments.findAll);
+    // router.get("/:id", instruments.findOne);
 
-    app.use('/api/account', router);
+    app.use('/api/instruments', router);
 
 };
