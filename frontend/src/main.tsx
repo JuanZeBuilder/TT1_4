@@ -1,17 +1,14 @@
-import "./index.css";
+import './index.css';
 
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from "react-router-dom";
+    createBrowserRouter, createRoutesFromElements, Route, RouterProvider
+} from 'react-router-dom';
 
-import App from "./App.tsx";
-import DashboardPage from "./pages/DashboardPage.tsx";
-import HomePage from "./pages/HomePage.tsx";
+import App from './App.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
+import HomePage from './pages/HomePage.tsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

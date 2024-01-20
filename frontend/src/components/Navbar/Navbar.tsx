@@ -1,9 +1,9 @@
 // Navbar.tsx
 
-import "./Navbar.css";
+import './Navbar.css';
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
   // Add any props if needed
