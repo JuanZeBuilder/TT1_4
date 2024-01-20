@@ -1,4 +1,4 @@
-const sql = require("../config");
+const sql = require("../config/db.config");
 
 const Itinerary = function (itinerary) {
   this.id = itinerary.id;

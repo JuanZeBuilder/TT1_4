@@ -1,9 +1,9 @@
 module.exports = app => {
-  const instruments = require("../controllers/Instrument");
+  const itinerary = require("../controllers/Itinerary");
 
   var router = require("express").Router();
   // router.post("/", instruments.create);
   router.get("/", itinerary.createItinerary);
-  router.get("/:userId", instruments.findOne);
+  router.get("/:userId", itinerary.findOne);
 
 };

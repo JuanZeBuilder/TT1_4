@@ -1,15 +1,4 @@
-const Instrument = require("../models/Instrument");
-
-exports.findAll = (req, res) => {
-    Instrument.getAll((err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving req.body."
-            });
-        else res.send(data);
-    });
-};
+const Itinerary = require("../models/Itinerary");
 
 exports.getItineraryByUserId = (req, res) => {
   Order.findById(req.params.userId, (err, data) => {

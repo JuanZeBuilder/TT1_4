@@ -15,7 +15,7 @@ Country.getAll = result => {
             return;
         }
 
-        console.log("instrument: ", res);
+        console.log("Country: ", res);
         result(null, res);
     });
 };
