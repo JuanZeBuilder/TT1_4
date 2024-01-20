@@ -1,20 +1,29 @@
 const jwt = require('jsonwebtoken');
-const secretKey = 'secret_key';
+const secretKey = 'techtreck24';
 
 function authenticateToken(req, res, next) {
-    const token = req.header('Authorization');
+    // const token = req.header('Authorization');
+    console.log(req)
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+    console.log(token);
 
     if (!token) {
         return res.status(401).json({ message: 'Unauthorized: Missing token' });
     }
 
-    jwt.verify(token, { algorithms: ['RS256'] }, secretKey, (err, user) => {
+    jwt.verify(token, secretKey, (err, decoded) => {
+        console.log(secretKey)
+        console.log(token)
+        console.log(decoded)
         if (err) {
-            return res.status(403).json({ message: 'Forbidden: Invalid token' });
+            console.log(err)
+          return res.status(401).json({ message: 'Unauthorized - Invalid token' });
         }
-        req.user = user;
+    
+        req.user = decoded;
         next();
-    });
+      });
 }
 
 module.exports = authenticateToken;
