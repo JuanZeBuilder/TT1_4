@@ -18,11 +18,17 @@ exports.login =  (req, res) => {
                     err.message || "Some error occurred while at Login route ."
             });
         else {
-            if (data){
+            if (data.length>0){
             //res.send(data);
             const token = await generate_token(data["id"])
             res.send({status: "Ok", 
                 jwt_token: token});
+            }
+            else{
+                res.status(500).send({
+                    message:
+                        "ERROR: NO USER."
+                });   
             }
         }
     });

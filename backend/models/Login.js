@@ -34,7 +34,16 @@ const MainLogin = (req, res) => {
                 res(null, err);
                 return;
             }
-            res(null, result);
+            
+            if(result===undefined){
+                console.log("error: ", err);
+                res(null, err);
+                return;
+            }
+            else{
+                console.log(result);
+                res(null, result);   
+            }
         });
     
 };
