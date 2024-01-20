@@ -22,6 +22,7 @@ exports.login =  (req, res) => {
             //res.send(data);
             const token = await generate_token(data["id"])
             res.send({status: "Ok", 
+                    user: data,
                 jwt_token: token});
             }
             else{
