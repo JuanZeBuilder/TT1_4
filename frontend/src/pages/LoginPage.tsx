@@ -20,31 +20,14 @@ const LoginPage = () => {
       return;
     }
 
-    const dummyLoginResponse = {
-      status: "Ok",
-      user: [
-        {
-          id: 1,
-          first_name: "John",
-          last_name: "Doe",
-          password: "johndoe123",
-          username: "johndoe",
-        },
-      ],
-      jwt_token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MDU3MzE2NDB9.DSeSJ7bx94K5_yaPK81IfbMLEy1d4QAPNZjXo8zT5_4",
-    };
-    login(dummyLoginResponse);
-    navigate("/home");
+    const loginResponse = await doLogin(accountId, password);
 
-    // const loginResponse = await doLogin(accountId, password);
-
-    // if (loginResponse === null) {
-    //   setError("Login failed... Please try again");
-    // } else {
-    //   login(loginResponse);
-    //   navigate("/home");
-    // }
+    if (loginResponse === null) {
+      setError("Login failed... Please try again");
+    } else {
+      login(loginResponse);
+      navigate("/home");
+    }
   };
 
   return (

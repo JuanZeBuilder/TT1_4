@@ -36,25 +36,26 @@ const PlannerPage: React.FC = () => {
   const getItineries = async () => {
     if (user == null) return;
 
-    // const list = await getAllItineraries(user.id, webToken);
-    const list = [
-      {
-        title: "Sightseeing in Singapore",
-        budget: 500,
-        country: "Singapore",
-        destinations: [
-          "Marina Bay Sands",
-          "Gardens by the Bay",
-          "Sentosa Island",
-        ],
-      },
-      {
-        title: "Singapore Adventure",
-        budget: 800,
-        country: "Singapore",
-        destinations: ["Universal Studios Singapore", "Singapore Zoo"],
-      },
-    ];
+    const list = await getAllItineraries(user.id, webToken);
+    // const list = [
+    //   {
+    //     title: "Sightseeing in Singapore",
+    //     budget: 500,
+    //     country: "Singapore",
+    //     destinations: [
+    //       "Marina Bay Sands",
+    //       "Gardens by the Bay",
+    //       "Sentosa Island",
+    //     ],
+    //   },
+    //   {
+    //     title: "Singapore Adventure",
+    //     budget: 800,
+    //     country: "Singapore",
+    //     destinations: ["Universal Studios Singapore", "Singapore Zoo"],
+    //   },
+    // ];
+    console.log(list);
     setItineriesList(list);
   };
 
