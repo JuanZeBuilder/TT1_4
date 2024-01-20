@@ -14,6 +14,7 @@ import Stack from '@mui/material/Stack';
 import {
     DataGrid, GridColDef, GridRowSelectionModel, GridValueGetterParams
 } from '@mui/x-data-grid';
+import Navbar from "../components/Navbar/Navbar";
 
 // columns header
 const columns: GridColDef[] = [
@@ -92,35 +93,38 @@ export default function DashboardPage() {
   };
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
-      <Typography variant="h4" sx={{ margin: "8px 0" }}>
-        Plans
-      </Typography>
-      <Stack spacing={2} direction="row" sx={{ margin: "4px 0" }}>
-        <Button startIcon={<AddIcon />}>New Plan</Button>
-        <LoadingButton
-          startIcon={<DeleteIcon />}
-          loading={deleting}
-          onClick={handleDelete}
-        >
-          Delete
-        </LoadingButton>
-      </Stack>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5,
+    <>
+      <Navbar path="dashboard" />
+      <Box sx={{ height: 400, width: "100%" }}>
+        <Typography variant="h4" sx={{ margin: "8px 0" }}>
+          Plans
+        </Typography>
+        <Stack spacing={2} direction="row" sx={{ margin: "4px 0" }}>
+          <Button startIcon={<AddIcon />}>New Plan</Button>
+          <LoadingButton
+            startIcon={<DeleteIcon />}
+            loading={deleting}
+            onClick={handleDelete}
+          >
+            Delete
+          </LoadingButton>
+        </Stack>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 5,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        onRowSelectionModelChange={(params) => setSelected(params)} // todo: delete
-      />
-    </Box>
+          }}
+          pageSizeOptions={[5]}
+          checkboxSelection
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(params) => setSelected(params)} // todo: delete
+        />
+      </Box>
+    </>
   );
 }

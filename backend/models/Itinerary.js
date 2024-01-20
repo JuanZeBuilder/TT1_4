@@ -1,91 +1,75 @@
-const { hashSync, genSaltSync, compareSync } = require("bcrypt");
+const sql = require("../config/db.config");
 
-const Account = require("../models/Account");
+const Itinerary = function (itinerary) {
+  this.id = itinerary.id;
+  this.country_id = itinerary.country_id;
+  this.user_id = itinerary.user_id;
+  this.budget = itinerary.budget;
+  this.title = itinerary.title;
+};
 
-exports.register = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
+Itinerary.createItinerary = (req, result) => {
+  // let req = itinerary.body;
+  console.log(req.body);
+  sql.query("INSERT INTO itinerary SET ?", req.body, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    } else {
+      result(null, res);
     }
-
-    const account = new Account({
-        ACCOUNT_ID: req.body.ACCOUNT_ID,
-        PASSWORD: req.body.PASSWORD,
-        FIRST_NAME: req.body.FIRST_NAME,
-        LAST_NAME: req.body.LAST_NAME,
-        DOB: req.body.DOB,
-        EMAIL: req.body.EMAIL
-    });
-
-    const salt = genSaltSync(10);
-    console.log(account.PASSWORD);
-    account.PASSWORD = hashSync(account.PASSWORD, salt);
-
-    Account.create(account, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while registering."
-            });
-        else res.send("Registration successful!");
-    });
+  });
 };
 
-exports.login = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
+Itinerary.getByUserId = (userId, result) => {
+  sql.query(
+    `SELECT
+  i.title AS title,
+  i.budget AS budget,
+  c.name AS country_name,
+  GROUP_CONCAT(d.name) AS destination_names
+FROM
+  techtrek24.itinerary i
+JOIN
+  techtrek24.itinerary_destination id ON i.id = id.itinerary_id
+JOIN
+  techtrek24.destination d ON id.destination_id = d.id
+JOIN
+  techtrek24.country c ON i.country_id = c.id
+WHERE
+  i.user_id = ${userId}
+GROUP BY
+  i.title, i.budget, c.name;
+`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        const formattedResult = res.map((row) => {
+          return {
+            title: row.title,
+            budget: row.budget,
+            country: row.country_name,
+            destinations: row.destination_names
+              ? row.destination_names
+                  .split(",")
+                  .map((destination) => destination.trim())
+              : [],
+          };
         });
+
+        console.log("Itinerary: ", formattedResult);
+        result(null, formattedResult);
+        return;
+      }
+      result({ kind: "not_found" }, null);
     }
-
-    const ACCOUNT_ID = req.body.ACCOUNT_ID;
-    const PASSWORD = req.body.PASSWORD;
-
-    Account.findById(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred during login."
-            });
-        else {
-            const isValidPassword = compareSync(PASSWORD, data[0].PASSWORD);
-
-            if (isValidPassword) {
-                res.send("Login success!");
-            } else {
-                res.send("Login failed!");
-
-            }
-
-        };
-    });
-
+  );
 };
 
-exports.subscribe = (req, res) => {
-    console.log(req.params.id);
-    const ACCOUNT_ID = req.params.id;
-
-    Account.subscribe(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while subscribing."
-            });
-        else res.send("Subscription successful!");
-    });
-};
-
-exports.getSubscribers = (req, res) => {
-
-    Account.getSubscribers((err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving subscribers."
-            });
-        else res.send(data);
-    });
-};
-
+module.exports = Itinerary;

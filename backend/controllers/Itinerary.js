@@ -1,91 +1,31 @@
-const { hashSync, genSaltSync, compareSync } = require("bcrypt");
+const Itinerary = require("../models/Itinerary");
 
-const Account = require("../models/Account");
-
-exports.register = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
+exports.createItinerary = (req, res) => {
+  Itinerary.createItinerary(req, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving req.body.",
+      });
+    else {
+      const { id, country_id, user_id, budget, title } = req.body;
+      res.status(201).json({ id, country_id, user_id, budget, title });
     }
-
-    const account = new Account({
-        ACCOUNT_ID: req.body.ACCOUNT_ID,
-        PASSWORD: req.body.PASSWORD,
-        FIRST_NAME: req.body.FIRST_NAME,
-        LAST_NAME: req.body.LAST_NAME,
-        DOB: req.body.DOB,
-        EMAIL: req.body.EMAIL
-    });
-
-    const salt = genSaltSync(10);
-    console.log(account.PASSWORD);
-    account.PASSWORD = hashSync(account.PASSWORD, salt);
-
-    Account.create(account, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while registering."
-            });
-        else res.send("Registration successful!");
-    });
+  });
 };
-
-exports.login = (req, res) => {
-    if (!req.body) {
-        res.status(400).send({
-            message: "Content can not be empty!"
+exports.getItineraryByUserId = (req, res) => {
+  Itinerary.getByUserId(req.params.userId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `No itinerary found for user id ${req.params.userId}.`,
         });
-    }
-
-    const ACCOUNT_ID = req.body.ACCOUNT_ID;
-    const PASSWORD = req.body.PASSWORD;
-
-    Account.findById(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred during login."
-            });
-        else {
-            const isValidPassword = compareSync(PASSWORD, data[0].PASSWORD);
-
-            if (isValidPassword) {
-                res.send("Login success!");
-            } else {
-                res.send("Login failed!");
-
-            }
-
-        };
-    });
-
+      } else {
+        res.status(500).send({
+          message:
+            "Error retrieving itinerary with user id " + req.params.userId,
+        });
+      }
+    } else res.send(data);
+  });
 };
-
-exports.subscribe = (req, res) => {
-    console.log(req.params.id);
-    const ACCOUNT_ID = req.params.id;
-
-    Account.subscribe(ACCOUNT_ID, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while subscribing."
-            });
-        else res.send("Subscription successful!");
-    });
-};
-
-exports.getSubscribers = (req, res) => {
-
-    Account.getSubscribers((err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving subscribers."
-            });
-        else res.send(data);
-    });
-};
-
