@@ -29,3 +29,13 @@ exports.getItineraryByUserId = (req, res) => {
     } else res.send(data);
   });
 };
+exports.editItinerary = (req, res) => {
+  Itinerary.editItinerary(req.params.id, req, (err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving req.body.",
+      });
+    else res.send(data);
+  });
+};
