@@ -3,12 +3,15 @@ import "./App.css";
 import { Outlet } from "react-router-dom";
 
 import CssBaseline from "@mui/material/CssBaseline";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <>
-      <CssBaseline />
-      <Outlet />
+      <AuthProvider>
+        <CssBaseline />
+        <Outlet />
+      </AuthProvider>
     </>
   );
 }
