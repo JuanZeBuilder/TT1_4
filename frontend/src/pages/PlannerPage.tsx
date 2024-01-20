@@ -21,7 +21,7 @@ const PlannerPage: React.FC = () => {
   const [plannedItineraryText, setPlannedItineraryText] = useState("");
   const [isCopied, setIsCopied] = useState(false);
   const [itinerariesList, setItineriesList] = useState<Itinerary[]>([]);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user, webToken } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,14 +31,32 @@ const PlannerPage: React.FC = () => {
     }
 
     getItineries();
-
   }, []);
 
   const getItineries = async () => {
-    const list = await getAllItineraries("123Example");
+    if (user == null) return;
 
+    // const list = await getAllItineraries(user.id, webToken);
+    const list = [
+      {
+        title: "Sightseeing in Singapore",
+        budget: 500,
+        country: "Singapore",
+        destinations: [
+          "Marina Bay Sands",
+          "Gardens by the Bay",
+          "Sentosa Island",
+        ],
+      },
+      {
+        title: "Singapore Adventure",
+        budget: 800,
+        country: "Singapore",
+        destinations: ["Universal Studios Singapore", "Singapore Zoo"],
+      },
+    ];
     setItineriesList(list);
-  }
+  };
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
@@ -97,7 +115,7 @@ const PlannerPage: React.FC = () => {
               </MenuItem>
               {itinerariesList.map((itinerary, index) => (
                 <MenuItem key={index} value={index}>
-                  {itinerary.title} - {itinerary.country}
+                  {itinerary.title} - {itinerary.country} - {itinerary.destinations.join(", ")}
                 </MenuItem>
               ))}
             </Select>
