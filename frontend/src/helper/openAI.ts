@@ -4,7 +4,7 @@ export const callOpenAPI = async (itinerary): Promise<string> => {
   try {
     const content = "I will send you the json string of the itinerary, with its budget, country and list of destinations: " + JSON.stringify(itinerary);
 
-    const openAiKey = "<COPY_FROM_TELE_CHAT>";
+    const openAiKey = "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";
     const openai = new OpenAI({ apiKey: openAiKey, dangerouslyAllowBrowser: true });
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
