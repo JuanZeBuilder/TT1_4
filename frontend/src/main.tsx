@@ -14,7 +14,6 @@ import DashboardPage from "./pages/DashboardPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import PlannerPage from "./pages/PlannerPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
-import RegisterPage from "./pages/RegisterPage.tsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,7 +23,6 @@ const router = createBrowserRouter(
       <Route path="dashboard" element={<DashboardPage />} />
       <Route path="planner" element={<PlannerPage />} />
       <Route path="login" element={<LoginPage />} />
-      <Route path="register" element={<RegisterPage />} />
     </Route>
   )
 );

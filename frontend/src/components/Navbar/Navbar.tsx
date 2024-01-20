@@ -70,14 +70,6 @@ const Navbar: React.FC<NavbarProps> = ({ path }: NavbarProps) => {
               >
                 Login
               </li>
-              <li
-                className={`nav-item ${
-                  activeNavItem === "register" ? "active" : ""
-                }`}
-                onClick={() => handleNavItemClick("register")}
-              >
-                Register
-              </li>
             </li>
           )}
         </ul>
