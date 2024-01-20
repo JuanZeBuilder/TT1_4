@@ -29,3 +29,20 @@ exports.getItineraryByUserId = (req, res) => {
     } else res.send(data);
   });
 };
+
+exports.deleteItinerary = (req, res) => {
+  Itinerary.deleteItinerary(req.params.itineraryId, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Itinerary ${req.params.itineraryId} does not exist.`,
+        });
+      } else {
+        res.status(500).send({
+          message:
+            "Error retrieving itinerary with itinerary id " + req.params.itineraryId,
+        });
+      }
+    } else res.send("Successfully deleted");
+  });
+};
