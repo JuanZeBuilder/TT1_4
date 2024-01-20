@@ -25,6 +25,6 @@ require("./routes/Itinerary")(app);
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
   console.log(
-    `Server is running on port ${PORT}. Link here: http://localhost:8080`
+    `Server is running on port ${PORT}. Link here: http://localhost:8081`
   );
 });

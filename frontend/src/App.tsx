@@ -1,11 +1,17 @@
 import "./App.css";
 
-import HomePage from "./pages/HomePage";
+import { Outlet } from "react-router-dom";
+
+import CssBaseline from "@mui/material/CssBaseline";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
     <>
-      <HomePage />
+      <AuthProvider>
+        <CssBaseline />
+        <Outlet />
+      </AuthProvider>
     </>
   );
 }

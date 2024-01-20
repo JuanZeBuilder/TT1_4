@@ -1,4 +1,4 @@
-const sql = require("../config");
+const sql = require("../config/db.config");
 
 const Itinerary = function (itinerary) {
   this.id = itinerary.id;
@@ -8,23 +8,17 @@ const Itinerary = function (itinerary) {
   this.title = itinerary.title;
 };
 
-Itinerary.createItinerary = (result) => {
-  let query =
-    "INSERT INTO techtrek24.itinerary (`id`, `country_id`, `user_id`, `budget`, `title`) VALUES (?)";
-  const values = [
-    req.body.id,
-    req.body.country_id,
-    req.body.user_id,
-    req.body.budget,
-    req.body.title,
-  ];
-  sql.query(query, [values], (err, res) => {
+Itinerary.createItinerary = (req, result) => {
+  // let req = itinerary.body;
+  console.log(req.body);
+  sql.query("INSERT INTO itinerary SET ?", req.body, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
+    } else {
+      result(null, res);
     }
-    res.json(result);
   });
 };
 
