@@ -1,4 +1,4 @@
-import {useState, MouseEvent, ChangeEvent, FormEvent} from "react";
+import {useState, MouseEvent, ChangeEvent, FormEvent, Fragment} from "react";
 // for items in popover
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,6 +6,12 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 // for popover
 import Popover from '@mui/material/Popover';
@@ -19,88 +25,84 @@ const CreateItinerary = () => {
     const [budget, setBudget] = useState<number>();
     const [country, setCountry] = useState('');
     
-    // popover
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const [open, setOpen] = useState(false);
 
-    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
+    const handleClickOpen = () => {
+      setOpen(true);
     };
   
     const handleClose = () => {
-      setAnchorEl(null);
-    }
+      setOpen(false);
+    };
 
     // submitting new itinerary
     const handleSubmit = (e) => {
         e.preventDefault();
         const itinerary = {destination, budget, country};
-        axios.post("http://127.0.0.1:3000/", itinerary).then((response)=>{
-            console.log(response.status, response.data.token);
-        })
+        console.log(itinerary)
+        // axios.post("http://127.0.0.1:3000/", itinerary).then((response)=>{
+        //     console.log(response.status, response.data.token);
+        // })
+        handleClose()
     }
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
-    return(
-        <div className = "create">
-            <Button aria-describedby={id} variant = "contained" onClick={handleClick}>
-                Create New Itinerary
-            </Button>
-            <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left'
-                }}>
-                <div style ={{
-                    width: '1000px',
-                    height: '400px'
-                }}>
-                {/* <FormControl fullWidth> */}
-                <div>
-                <TextField fullWidth
-                required
-                id="destination-required"
-                label="Destination"
-                value={destination}
-                onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+    return (
+        <Fragment>
+          <Button variant="outlined" onClick={handleClickOpen}>
+            Create New Itinerary
+          </Button>
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">
+              {"Create New Itinerary"}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>Destination:
+                    <TextField fullWidth
+                    required
+                    id="destination-required"
+                    // label="Destination"
+                    value={destination}
+                    onChange={(event: ChangeEvent<HTMLInputElement>)=>{
                     setDestination(event.target.value)
-                }}
+                    }}
+                    /> 
+                </DialogContentText>
+            </DialogContent>
+            <DialogContent> 
+              <DialogContentText id="alert-dialog-description">Budget:
+              <NumberInput required 
+              id="budget-required" 
+              value= {budget} 
+              onChange={(event, val) =>setBudget(val)}
                 />
-                </div>
-                <div>
-                <NumberInput
-                required
-                id="budget-required"
-                value= {budget}
-                onChange={(event, val) =>setBudget(val)}
-                />
-                </div>
-                <div>
-                <TextField fullWidth
-                required
-                id="country-required"
-                label="Country"
-                value={country}
-                onChange={(event: ChangeEvent<HTMLInputElement>)=>{
-                    setCountry(event.target.value)
-                }}
-                />
-                </div>
-                {/* </FormControl> */}
-                </div>
-                <Button aria-describedby={id} variant = "contained" onClick={handleSubmit}>
-                Submit
-            </Button>
-            </Popover>
-        </div>
-    )
+              </DialogContentText>
+            </DialogContent>
+            <DialogContent>
+                <DialogContentText>Country:
+                    <TextField fullWidth
+                        required
+                        id="country-required"
+                        // label="Country"
+                        value={country}
+                        onChange={(event: ChangeEvent<HTMLInputElement>)=>{
+                        setCountry(event.target.value)
+                        }}
+                    /> 
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              {/* <Button onClick={handleClose}>Disagree</Button> */}
+              <Button onClick={handleSubmit} autoFocus>
+                Agree
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Fragment>
+      );
 }
-
-
 
 export default CreateItinerary
